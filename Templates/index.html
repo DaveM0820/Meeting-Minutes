@@ -6,10 +6,10 @@
     <title>OpenAI Meeting Minutes</title>
 </head>
 <body>
-    <form action="/generate" method="post">
-        <label for="prompt">Enter your prompt:</label>
-        <textarea id="prompt" name="prompt" rows="4" cols="50"></textarea>
-        <button type="submit">Generate</button>
+    <h1>Upload an Audio File</h1>
+    <form action="/generate" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="audio/*">
+        <button type="submit">Generate Minutes</button>
     </form>
 </body>
 </html>

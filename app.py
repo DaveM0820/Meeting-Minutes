@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request
 import openai
-from config import OPENAI_API_KEY
 import whisper
-
+import os
 model = whisper.load_model("base")
-
+print("Current Working Directory:", os.getcwd())
 # load audio and pad/trim it to fit 30 seconds
-audio = whisper.load_audio("audio.mp3")
+audio = whisper.load_audio("meeting.mp3")
+print(f"Audio duration: seconds")
 audio = whisper.pad_or_trim(audio)
 
 # make log-Mel spectrogram and move to the same device as the model

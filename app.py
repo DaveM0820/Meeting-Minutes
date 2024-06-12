@@ -2,29 +2,38 @@ from flask import Flask, render_template, request
 import openai
 import whisper
 import os
-model = whisper.load_model("base")
 print("Current Working Directory:", os.getcwd())
+filePath = os.path.join(os.getcwd(), "meeting.mp3")
+print("Current File:", filePath)
+
 # load audio and pad/trim it to fit 30 seconds
-audio = whisper.load_audio("meeting.mp3")
-print(f"Audio duration: seconds")
-audio = whisper.pad_or_trim(audio)
+try:
+    with open(filePath, 'rb') as f:
+        print("File can be opened")
+except Exception as e:
+    print(f"Cannot open file: {e}")
+if os.path.exists(filePath):
+    model = whisper.load_model("large")
+    audio = whisper.load_audio("meeting.mp3")
+    audio = whisper.pad_or_trim(audio)
+    mel = whisper.log_mel_spectrogram(audio).to(model.device)
+    _, probs = model.detect_language(mel)
+    options = whisper.DecodingOptions()
+    result = whisper.decode(model, mel, options)
+    print(f"Detected language: {max(probs, key=probs.get)}")
+
+    print(result.text)
 
 # make log-Mel spectrogram and move to the same device as the model
-mel = whisper.log_mel_spectrogram(audio).to(model.device)
 
 # detect the spoken language
-_, probs = model.detect_language(mel)
-print(f"Detected language: {max(probs, key=probs.get)}")
 
 # decode the audio
-options = whisper.DecodingOptions()
-result = whisper.decode(model, mel, options)
+
 
 # print the recognized text
-print(result.text)
 
 app = Flask(__name__)
-openai.api_key = OPENAI_API_KEY
 
 def transcribe_audio(file_path):
     audio_file = open(file_path, 'rb')
@@ -66,4 +75,4 @@ def generate():
     return summary
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    print("running")

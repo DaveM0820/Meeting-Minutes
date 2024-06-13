@@ -5,7 +5,7 @@ import os
 print("Current Working Directory:", os.getcwd())
 filePath = os.path.join(os.getcwd(), "meeting.mp3")
 print("Current File:", filePath)
-
+#test commit
 # load audio and pad/trim it to fit 30 seconds
 try:
     with open(filePath, 'rb') as f:
